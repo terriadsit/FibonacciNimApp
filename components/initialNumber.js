@@ -6,11 +6,11 @@ import DisplaySticks from './displaySticks';
 
 export default function InitialNumber() {
     const max = 200;
-    const random = Math.random() * max;
+    const random = Math.floor(Math.random() * max);
 
     return (
         <View>
-            <DisplaySticks number={random} />
+            <DisplaySticks howMany={random} />
         </View>
     )
 }
