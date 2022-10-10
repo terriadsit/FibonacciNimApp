@@ -6,8 +6,7 @@ import Stick from './stick';
 
 export default function DisplaySticks({howMany}) {
     const emptyArray = Array(howMany).fill(0);
-    console.log('empty Array', emptyArray)
-
+  
     return (
         <View>
             <View style={styles.stickContainer}>
