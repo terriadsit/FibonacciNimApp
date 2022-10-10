@@ -15,6 +15,7 @@ import DirectionsStack from './directionsStack'
 import PlayerVsLocal from '../screens/playerVsLocal';
 import PlayerVsPC from '../screens/playerVsPC';
 import PlayerVsRemote from '../screens/playerVsRemote';
+import Header from '../components/header';
 
 function CustomDrawerContent(props) {
     return (
@@ -48,34 +49,34 @@ function CustomDrawerContent(props) {
           }
         }}
        
-        Navigator initialRouteName="Home"
+        Navigator initialRouteName="HomeStack"
         useLegacyImplementation
         drawerContent={(props) => <CustomDrawerContent {...props} />}
       >
         <Drawer.Screen 
           name="Home" 
           component={HomeStack} 
-          //options={{ headerTitle: (props) => <Header title='CONNECTION CHURCH  ' /> }} 
+          options={{ headerTitle: (props) => <Header title='Fibonacci Nim ' /> }} 
          />
          <Drawer.Screen 
           name="Directions" 
           component={DirectionsStack} 
-         // options={{ headerTitle: (props) => <Header title='CONNECTION CHURCH  ' /> }} 
+          options={{ headerTitle: (props) => <Header title='What to do  ' /> }} 
          />
          <Drawer.Screen 
           name="Against AI" 
           component={PlayerVsPC} 
-          //options={{ headerTitle: (props) => <Header title='The Bible:'/> }}
+          options={{ headerTitle: (props) => <Header title='Beat the computer'/> }}
         />
         <Drawer.Screen 
           name="2 Players 1 Screen" 
           component={PlayerVsLocal} 
-          //options={{ headerTitle: (props) => <Header title='About Us:'/> }}
+          options={{ headerTitle: (props) => <Header title='Share a screen'/> }}
         />
         <Drawer.Screen 
           name="Play Online" 
           component={PlayerVsRemote} 
-          //options={{ headerTitle: (props) => <Header title='Watch Sermons:' /> }} 
+          options={{ headerTitle: (props) => <Header title='Play online' /> }} 
          />
         
      </Drawer.Navigator>
