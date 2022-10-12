@@ -48,18 +48,45 @@ export default function PlayerVsPC() {
     function aiTurn() {
         loadFibonacci(presentNumber);
         console.log('aiturn', fibonacci)
-        let remove = presentNumber;
-        let leftover = presentNumber - fibonacci[fibonacci.length - 1];
-        while (leftover > 0) {
-            fibonacci = []
-            loadFibonacci(leftover);
-            remove = leftover;
-            leftover -= fibonacci[fibonacci.length - 1];
+        let total = 0;
+        for (let i = fibonacci.length - 1; i >= 1; i--) {
+            if (total + fibonacci[i] <= presentNumber) {
+                total += fibonacci[i];
+                remove = fibonacci[i];
+            }
         }
-        if (remove <= 2 * prevRemove ) {
-           // removeSticks(remove);
+
+        if (remove > 2 * prevRemove) {
+            remove = 2 * prevRemove;
         }
-        console.log('leftover', remove);
+        // let remove = presentNumber;
+        // let leftover = presentNumber - fibonacci[fibonacci.length - 1];
+        // let isAcceptable = false;
+        // while (!isAcceptable & leftover > 1) {
+
+        //     console.log('in while', leftover);
+        //     fibonacci = []
+        //     loadFibonacci(leftover);
+            
+        //     leftover -= fibonacci[fibonacci.length - 1];
+        //     console.log('remove', remove, 'prevRemove', prevRemove, 'fibonacci', fibonacci)
+        //     isAcceptable = ((fibonacci.includes(leftover) && leftover <= (2 * prevRemove)) || leftover <= 0 );
+        //     console.log('includes', fibonacci.includes(remove), "less than?", remove <= (2*prevRemove) )
+        //     console.log('isAccept', isAcceptable)
+        //     if (leftover > 0 ){
+        //         remove = leftover;
+        //     } else {
+        //         remove = 2 * prevRemove
+        //     }
+        // }
+        // if (leftover ===1 ) {
+        //     remove = 1;
+        // }
+        // if (remove <= 2 * prevRemove ) {
+        //    // removeSticks(remove);
+
+        // }
+        console.log('remove', remove);
     }
 
     if (choseNumber ) {
