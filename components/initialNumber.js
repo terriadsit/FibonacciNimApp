@@ -10,6 +10,7 @@ export default function InitialNumber({...props}) {
     //let textNumber = props.intitial;
     const setBeginning = props.setBeginning;
     const setChoseNumber = props.setChoseNumber;
+    const setPlayer1Turn = props.setPlayer1Turn;
 
     console.log('initial', props.initial)
     
@@ -22,7 +23,8 @@ export default function InitialNumber({...props}) {
     function onEndEdit() {
         setBeginning(initialSticks);
         setChoseNumber(true);
-        console.log('onEndit intialSticks', initialSticks)
+        console.log('onEndit intialSticks', initialSticks);
+        setPlayer1Turn(true);
     }
 
     function hide() {

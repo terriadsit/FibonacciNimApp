@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
+
 import FlatButton from '../components/button';
 import DisplaySticks from '../components/displaySticks';
 import InitialNumber from '../components/initialNumber';
+import PlayerChooses from '../components/playerChooses';
 
 export default function PlayerVsPC() {
     const max = 200;
@@ -11,18 +13,34 @@ export default function PlayerVsPC() {
 
     const [beginning, setBeginning] = useState(tempRandom);
     const [random, setRandom] = useState(tempRandom);
-    const [choseNumber, setChoseNumber] = useState(false);
+    const [choseNumber, setChoseNumber] = useState(false); 
     //const [presentNumber, setPresentNumber] = useState(0);
+    const [player1Turn, setPlayer1Turn] = useState(false);
+    const [playerRemove, setPlayerRemove] = useState(0);
+    //const [aiRemove, setAiRemove] = useState(0);
 
     let fibonacci = [];
-    let summation = [];
     let presentNumber = 0;
-    let prevRemove = 10;
-   
+    //let prevRemove = 0;
+    let previousNumber = 0;
+    let won = false;
+    let playerWon = false;
+    let aiText = '';
+    let aiRemove = 0;
+         
     const initialProps = {
         initial: random,
         setBeginning: (beginning) => setBeginning(beginning),
-        setChoseNumber: (choseNumber) => setChoseNumber(choseNumber)
+        setChoseNumber: (choseNumber) => setChoseNumber(choseNumber),
+        setPlayer1Turn: (player1Turn) => setPlayer1Turn(player1Turn)
+    }
+
+    const playerChoosesProps = {
+        previousNumber: previousNumber,
+        beginning: beginning,
+        setPlayer1Turn: (player1Turn) => setPlayer1Turn(player1Turn),
+        setPlayerRemove: (playerRemove) => setPlayerRemove(playerRemove),
+       // aiTurn: () => aiTurn()
     }
 
     function newGame() {
@@ -43,9 +61,22 @@ export default function PlayerVsPC() {
         }
     }
 
-    //loadFibonacci(beginning);
+    function aiTurnEnds() {
+        setPlayer1Turn(true);
+    }
+
     
     function aiTurn() {
+        
+        fibonacci = [];
+        previousNumber = playerRemove;
+        presentNumber -= playerRemove;
+        if (presentNumber === 0) {
+            won = true;
+            playerWon = true;
+            return;
+        }
+        let remove = 0;
         loadFibonacci(presentNumber);
         console.log('aiturn', fibonacci)
         let total = 0;
@@ -56,43 +87,21 @@ export default function PlayerVsPC() {
             }
         }
 
-        if (remove > 2 * prevRemove) {
-            remove = 2 * prevRemove;
+        if (remove > 2 * previousNumber) {
+            remove = 2 * previousNumber;
         }
-        // let remove = presentNumber;
-        // let leftover = presentNumber - fibonacci[fibonacci.length - 1];
-        // let isAcceptable = false;
-        // while (!isAcceptable & leftover > 1) {
-
-        //     console.log('in while', leftover);
-        //     fibonacci = []
-        //     loadFibonacci(leftover);
-            
-        //     leftover -= fibonacci[fibonacci.length - 1];
-        //     console.log('remove', remove, 'prevRemove', prevRemove, 'fibonacci', fibonacci)
-        //     isAcceptable = ((fibonacci.includes(leftover) && leftover <= (2 * prevRemove)) || leftover <= 0 );
-        //     console.log('includes', fibonacci.includes(remove), "less than?", remove <= (2*prevRemove) )
-        //     console.log('isAccept', isAcceptable)
-        //     if (leftover > 0 ){
-        //         remove = leftover;
-        //     } else {
-        //         remove = 2 * prevRemove
-        //     }
-        // }
-        // if (leftover ===1 ) {
-        //     remove = 1;
-        // }
-        // if (remove <= 2 * prevRemove ) {
-        //    // removeSticks(remove);
-
-        // }
+        previousNumber = remove;
+        aiRemove = remove;
+        presentNumber -= remove;
         console.log('remove', remove);
+        aiText = `AI removes ${remove}`;
     }
-
-    if (choseNumber ) {
-        presentNumber = beginning;
-        aiTurn();
-        console.log('inchose', fibonacci) 
+    
+    presentNumber = beginning;
+    if (choseNumber) {
+        if (!player1Turn) {
+            aiTurn();
+        }
     }
 
     
@@ -100,6 +109,13 @@ export default function PlayerVsPC() {
     return (
         <View>
             {!choseNumber && <InitialNumber {...initialProps}/>}
+          
+            {choseNumber && <Text>Beginning Game with {beginning} sticks.</Text>}
+            {choseNumber && <Text>Presently there are {presentNumber} sticks.</Text>}
+            {choseNumber && player1Turn  && <PlayerChooses {...playerChoosesProps} />}
+            {!player1Turn && <Text>You removed {playerRemove} sticks leaving {presentNumber}.</Text>}
+            {choseNumber && !player1Turn && <FlatButton text={aiText} onPress={aiTurnEnds} />}
+            {playerWon && <Text>You Won! Excellent!</Text>}
             {choseNumber && <DisplaySticks howMany={beginning}  />}
             {choseNumber && <FlatButton text='New Game' onPress={newGame} />}
         </View>
