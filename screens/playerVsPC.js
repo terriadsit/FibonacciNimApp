@@ -14,21 +14,40 @@ export default function PlayerVsPC() {
     const [beginning, setBeginning] = useState(tempRandom);
     const [random, setRandom] = useState(tempRandom);
     const [choseNumber, setChoseNumber] = useState(false); 
-    //const [presentNumber, setPresentNumber] = useState(0);
+    const [presentNumber, setPresentNumber] = useState(0);
     const [player1Turn, setPlayer1Turn] = useState(false);
     const [playerRemove, setPlayerRemove] = useState(0);
+    const [totalRemoved, setTotalRemoved] = useState(0);
+    const [turn, setTurn] = useState(0);
     //const [aiRemove, setAiRemove] = useState(0);
 
     let fibonacci = [];
-    let presentNumber = 0;
+    //let presentNumber = 0;
     //let prevRemove = 0;
     let previousNumber = 0;
     let won = false;
     let playerWon = false;
-    let aiText = '';
+    let aiText = ''; 
     let aiRemove = 0;
-    let turn = 0;
+    //let turn = 0;
     let remove = 0; // ai removes
+
+    useEffect(() => {
+        if (turn === 0) {
+            setPresentNumber(beginning);
+           
+        } else {
+            if (turn % 2 === 1) {
+                setPresentNumber(prev => prev - playerRemove);
+            } else {
+                setPresentNumber(prev => prev - remove);
+            }
+            
+        }
+        console.log('useEffect', presentNumber, turn);
+        setTurn(prev => prev + 1);
+        
+    },[player1Turn])
          
     const initialProps = {
         initial: random,
@@ -43,13 +62,14 @@ export default function PlayerVsPC() {
         turn: turn,
         setPlayer1Turn: (player1Turn) => setPlayer1Turn(player1Turn),
         setPlayerRemove: (playerRemove) => setPlayerRemove(playerRemove),
+    //    setTotalRemoved: (totalRemoved) => setTotalRemoved(totalRemoved)
        // aiTurn: () => aiTurn()
     }
 
     function newGame() {
         setChoseNumber(false);
         setBeginning(tempRandom);
-        turn = 0;
+        setTurn(0);
     }
 
     function loadFibonacci(last) {
@@ -66,46 +86,66 @@ export default function PlayerVsPC() {
     }
 
     function aiTurnEnds() {
+        console.log('aiTurnEnds')
         setPlayer1Turn(true);
     }
 
     
     function aiTurn() {
-        turn++;
+        console.log('aiTurn, presentNumber', presentNumber, 'turn', turn);
+        //turn++;
+        console.log('turn again', turn);
         fibonacci = [];
-        previousNumber = playerRemove;
-        presentNumber -= playerRemove;
-        if (presentNumber === 0) {
-            won = true;
-            playerWon = true;
+        if (turn === 0) {
             return;
-        }
-        
-        loadFibonacci(presentNumber);
-        console.log('aiturn', fibonacci)
-        let total = 0;
-        for (let i = fibonacci.length - 1; i >= 1; i--) {
-            if (total + fibonacci[i] <= presentNumber) {
-                total += fibonacci[i];
-                remove = fibonacci[i];
+            //presentNumber = beginning;
+        } else {
+            previousNumber = playerRemove;
+           // presentNumber -= playerRemove;
+       
+            if (presentNumber === 0) {
+                won = true;
+                playerWon = true;
+                return;
             }
-        }
+        
+            loadFibonacci(presentNumber);
 
-        if (remove > 2 * previousNumber) {
-            remove = 2 * previousNumber;
+            console.log('fib in aiturn', fibonacci)
+            // choose how many to remove
+            let total = 0;
+            for (let i = fibonacci.length - 1; i >= 1; i--) {
+                if (total + fibonacci[i] <= presentNumber) {
+                  total += fibonacci[i];
+                  remove = fibonacci[i];
+                  }
+            console.log('remove in loop', remove);
+            }
+
+            // only able to remove if following rules
+            if (remove > 2 * previousNumber) {
+                remove = 2 * previousNumber;
+            }
+
+            // check if removing all so that ai won
+            previousNumber = remove;
+            aiRemove = remove;
+
+           // presentNumber -= remove;
+            console.log('remove', remove);
+            aiText = `AI removes ${remove}`;
+             //setTotalRemoved((prev) => prev - remove)
         }
-        previousNumber = remove;
-        aiRemove = remove;
-        presentNumber -= remove;
-        console.log('remove', remove);
-        aiText = `AI removes ${remove}`;
     }
     
-    presentNumber = beginning;
+
+
     if (choseNumber) {
-        if (!player1Turn) {
-            aiTurn();
-        }
+   //     while (presentNumber > 0) {
+          if (!player1Turn) {
+              aiTurn();
+          }
+   //     }
     }
 
     

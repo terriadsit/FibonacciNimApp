@@ -17,7 +17,7 @@ export default function PlayerChooses({...props}) {
     const largest = previousNumber === 0 ? beginning - 1 : previousNumber * 2;
     //const aiTurn = props.aiTurn;
 
-    console.log('initial', previousNumber)
+    console.log('in playerChooses, prevNumb', previousNumber)
     
     function onChange(number) {
         console.log('in onChange')
@@ -38,11 +38,11 @@ export default function PlayerChooses({...props}) {
         }
     }
 
-    function hide() {
-        setBeginning(initialSticks);
-        setChoseNumber(true);
-        console.log('in hide', initialSticks)
-    }
+    // function hide() {
+    //     setBeginning(initialSticks);
+    //     setChoseNumber(true);
+    //     console.log('in hide', initialSticks)
+    // }
 
     return (
         <View>
