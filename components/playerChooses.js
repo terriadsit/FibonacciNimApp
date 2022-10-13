@@ -13,6 +13,7 @@ export default function PlayerChooses({...props}) {
     const setPlayer1Turn = props.setPlayer1Turn;
     const setPlayerRemove = props.setPlayerRemove;
     const beginning = props.beginning;
+    const turn = props.turn;
     const largest = previousNumber === 0 ? beginning - 1 : previousNumber * 2;
     //const aiTurn = props.aiTurn;
 
@@ -46,7 +47,8 @@ export default function PlayerChooses({...props}) {
     return (
         <View>
             <View>
-              <Text style={styles.instructions}>The last player romoved {previousNumber}. You may remove between 1 and {largest}.</Text>
+              {turn !== 0 && <Text style={styles.instructions}>The last player romoved {previousNumber}.</Text>}
+              <Text style={styles.instructions}> You may remove between 1 and {largest}.</Text>
               <View style={styles.chooseNumberContainer}>
                 <TextInput
                      style={styles.input}

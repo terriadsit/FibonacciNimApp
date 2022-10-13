@@ -27,6 +27,8 @@ export default function PlayerVsPC() {
     let playerWon = false;
     let aiText = '';
     let aiRemove = 0;
+    let turn = 0;
+    let remove = 0; // ai removes
          
     const initialProps = {
         initial: random,
@@ -38,6 +40,7 @@ export default function PlayerVsPC() {
     const playerChoosesProps = {
         previousNumber: previousNumber,
         beginning: beginning,
+        turn: turn,
         setPlayer1Turn: (player1Turn) => setPlayer1Turn(player1Turn),
         setPlayerRemove: (playerRemove) => setPlayerRemove(playerRemove),
        // aiTurn: () => aiTurn()
@@ -46,6 +49,7 @@ export default function PlayerVsPC() {
     function newGame() {
         setChoseNumber(false);
         setBeginning(tempRandom);
+        turn = 0;
     }
 
     function loadFibonacci(last) {
@@ -67,7 +71,7 @@ export default function PlayerVsPC() {
 
     
     function aiTurn() {
-        
+        turn++;
         fibonacci = [];
         previousNumber = playerRemove;
         presentNumber -= playerRemove;
@@ -76,7 +80,7 @@ export default function PlayerVsPC() {
             playerWon = true;
             return;
         }
-        let remove = 0;
+        
         loadFibonacci(presentNumber);
         console.log('aiturn', fibonacci)
         let total = 0;
@@ -113,8 +117,8 @@ export default function PlayerVsPC() {
             {choseNumber && <Text>Beginning Game with {beginning} sticks.</Text>}
             {choseNumber && <Text>Presently there are {presentNumber} sticks.</Text>}
             {choseNumber && player1Turn  && <PlayerChooses {...playerChoosesProps} />}
-            {!player1Turn && <Text>You removed {playerRemove} sticks leaving {presentNumber}.</Text>}
-            {choseNumber && !player1Turn && <FlatButton text={aiText} onPress={aiTurnEnds} />}
+            {choseNumber && !player1Turn && <Text>You removed {playerRemove}, then AI removed {remove} sticks leaving {presentNumber}.</Text>}
+            {choseNumber && !player1Turn && <FlatButton text='your turn' onPress={aiTurnEnds} />}
             {playerWon && <Text>You Won! Excellent!</Text>}
             {choseNumber && <DisplaySticks howMany={beginning}  />}
             {choseNumber && <FlatButton text='New Game' onPress={newGame} />}
