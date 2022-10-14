@@ -11,7 +11,7 @@ export default function InitialNumber({...props}) {
     const setBeginning = props.setBeginning;
     const setChoseNumber = props.setChoseNumber;
     const setPlayer1Turn = props.setPlayer1Turn;
-
+    
     console.log('initial', props.initial)
     
     function onChange(number) {
@@ -25,7 +25,7 @@ export default function InitialNumber({...props}) {
         setChoseNumber(true);
         console.log('onEndit intialSticks', initialSticks);
         setPlayer1Turn(true);
-    }
+     }
 
     function hide() {
         setBeginning(initialSticks);

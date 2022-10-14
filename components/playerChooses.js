@@ -27,27 +27,22 @@ export default function PlayerChooses({...props}) {
 
     function onEndEdit() {
         console.log('tempRemove', tempRemove)
-        if (tempRemove < 1 || tempRemove >= largest) {
-            setError(`Choose a number between 1 and ${2 * previousNumber}`)
+        if (tempRemove < 1 || tempRemove > largest) {
+            setError(`Choose a number between 1 and ${largest}`)
         } else {
             setError('');
+            setPlayerRemove(0);
             setPlayerRemove(tempRemove);
-            //aiTurn();
             setPlayer1Turn(false);
-           
+           // console.log('in onEndit else', playerRemove)
         }
     }
 
-    // function hide() {
-    //     setBeginning(initialSticks);
-    //     setChoseNumber(true);
-    //     console.log('in hide', initialSticks)
-    // }
-
+    
     return (
         <View>
             <View>
-              {turn !== 0 && <Text style={styles.instructions}>The last player romoved {previousNumber}.</Text>}
+              {previousNumber !== 0 && <Text style={styles.instructions}>The last player, AI, removed {previousNumber}.</Text>}
               <Text style={styles.instructions}> You may remove between 1 and {largest}.</Text>
               <View style={styles.chooseNumberContainer}>
                 <TextInput
