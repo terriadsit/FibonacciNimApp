@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
 import { View, Text } from 'react-native'
+import { set } from 'react-native-reanimated'
 
 import FlatButton from '../components/button'
 import DisplaySticks from '../components/displaySticks'
@@ -19,14 +20,14 @@ export default function PlayerVsPC () {
   const [playerRemove, setPlayerRemove] = useState(0)
   const [totalRemoved, setTotalRemoved] = useState(0)
   const [turn, setTurn] = useState(0)
-  const [won, setWon] = useState(false)
   const [aiRemove, setAiRemove] = useState(0) 
   const [history, setHistory] = useState([])
-  
+  const [playerWon, setPlayerWon] = useState(false)
+  const [win, setWin] = useState(false)
+  const [aiWon, setAiWon] = useState(false)
 
   let fibonacci = []
   let previousNumber = 0
-  let playerWon = false
   let remove = 0 // ai temporary removes
 
   function arraySum(array) {
@@ -35,25 +36,6 @@ export default function PlayerVsPC () {
             (previousValue, currentValue) => previousValue + currentValue, initialValue)
     return sumWithInitial
   }
-
-  useEffect(() => {
-    //setPresentNumber(prev => prev - playerRemove)
-    console.log('useeffect player presentnum', presentNumber, 'ai', aiRemove, 'playerRev', playerRemove )
-  }, [playerRemove])
-
-  useEffect(() => {
-    //(prev => prev - aiRemove)
-    console.log('useeffect ai resentnum', presentNumber, 'ai', aiRemove, 'playerRev', playerRemove)
-  }, [aiRemove])
-
-//   useEffect(() => {
-//     console.log('in useEffect start turn', turn, 'present', presentNumber, 'flag',player1Turn, 'playerRemove', playerRemove, 'remove', remove)
-//     if (turn === 0) {
-//       setPresentNumber(beginning)
-//       setTurn(1)
-//     }
-//     setTurn(prev => prev + 1)
-//   }, [player1Turn])
 
   useEffect(() => {
     setPresentNumber(beginning)
@@ -91,11 +73,20 @@ export default function PlayerVsPC () {
     setBeginning(tempRandom)
     setTurn(0)
     setTotalRemoved(0)
+    setAiWon(false)
+    setPlayerWon(false)
+    setWin(false)
   }
 
-  function winner () {
-    setWon(true)
-    setPlayer1Turn(false)
+  function aiWins () {
+    setAiWon(true)
+    //setPlayer1Turn(false)
+    setWin(true)
+  }
+
+  function playerWins() {
+    setPlayerWon(true)
+    setWin(true)
   }
 
   function loadFibonacci (last) {
@@ -118,54 +109,58 @@ export default function PlayerVsPC () {
   }
 
   function aiTurn () {
+    
     console.log('aiTurn, presentNumber', presentNumber, 'turn', turn)
     fibonacci = []
     previousNumber = playerRemove
 
-    if (presentNumber === 0) {
-      won = true
-      playerWon = true
+    if (beginning - arraySum(history) === 0) {
+      playerWins()
       return
     }
 
-    loadFibonacci(presentNumber)
+    // can AI win this round?
+    if (presentNumber <= 2 * previousNumber && previousNumber !== 0) {
+        remove = presentNumber
+        aiWins()
+    } else {
 
-    console.log('fib in aiturn', fibonacci)
-    // choose how many to remove
-    let total = 0
-    for (let i = fibonacci.length - 1; i >= 1; i--) {
-      if (total + fibonacci[i] <= presentNumber) {
-        total += fibonacci[i]
-        remove = fibonacci[i]
+      loadFibonacci(presentNumber)
+
+      // choose how many to remove
+      let total = 0
+      for (let i = fibonacci.length - 1; i >= 1; i--) {
+        if (total + fibonacci[i] <= presentNumber) {
+          total += fibonacci[i]
+          remove = fibonacci[i]
+        }
       }
-      console.log('remove in loop', remove)
-    }
 
-    // only able to remove if following rules
-    if (remove > 2 * previousNumber) {
-      remove = 2 * previousNumber
+      // only able to remove if following rules
+      if (remove > 2 * previousNumber) {
+        remove = 2 * previousNumber
+      }
     }
-
-    // TODO check if removing all so that ai won
+    
     previousNumber = remove
-    //setAiRemove(0);
     setHistory(prev => [...prev, remove])
     setAiRemove(remove);
-    console.log('remove', history)
   }
 
   return (
     <View>
       {!choseNumber && <InitialNumber {...initialProps} />}
 
-      {choseNumber && <Text>Beginning Game with {beginning} sticks.</Text>}
+      {choseNumber &&  <Text>Beginning Game with {beginning} sticks.</Text>}
       {choseNumber && <Text>Presently there are {presentNumber} sticks.</Text>}
-      {choseNumber && player1Turn && <PlayerChooses {...playerChoosesProps} />}
-      {/* {choseNumber && !player1Turn && <Text>You removed {playerRemove}, then AI removed {remove} sticks leaving {presentNumber}.</Text>} */}
-      {choseNumber && !player1Turn && (
+
+      {choseNumber && player1Turn && !win && <PlayerChooses {...playerChoosesProps} />}
+     
+      {choseNumber && !player1Turn && !win && (
         <FlatButton text='your turn' onPress={aiTurnEnds} />
       )}
       {playerWon && <Text>You Won! Excellent!</Text>}
+      {aiWon && <Text>Ai chose {aiRemove} sticks. You lost, press New Game to try again</Text>}
       {choseNumber && <DisplaySticks howMany={beginning} />}
       {choseNumber && <FlatButton text='New Game' onPress={newGame} />}
     </View>

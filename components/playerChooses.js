@@ -17,11 +17,7 @@ export default function PlayerChooses({...props}) {
     const setHistory = props.setHistory;
     const turn = props.turn;
 
-
     const largest = previousNumber === 0 ? beginning - 1 : previousNumber * 2;
-    //const aiTurn = props.aiTurn;
-
-    console.log('in playerChooses, prevNumb', previousNumber)
     
     function onChange(number) {
         console.log('in onChange')
