@@ -13,7 +13,11 @@ export default function PlayerChooses({...props}) {
     const setPlayer1Turn = props.setPlayer1Turn;
     const setPlayerRemove = props.setPlayerRemove;
     const beginning = props.beginning;
+    const setTotalRemoved = props.setTotalRemoved;
+    const setHistory = props.setHistory;
     const turn = props.turn;
+
+
     const largest = previousNumber === 0 ? beginning - 1 : previousNumber * 2;
     //const aiTurn = props.aiTurn;
 
@@ -31,10 +35,11 @@ export default function PlayerChooses({...props}) {
             setError(`Choose a number between 1 and ${largest}`)
         } else {
             setError('');
-            setPlayerRemove(0);
+            //setPlayerRemove(0);
             setPlayerRemove(tempRemove);
             setPlayer1Turn(false);
-           // console.log('in onEndit else', playerRemove)
+            setHistory(prev => [...prev, Number(tempRemove)])
+            //console.log('in onEndit else', playerRemove)
         }
     }
 

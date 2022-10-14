@@ -20,21 +20,30 @@ export default function PlayerVsPC () {
   const [totalRemoved, setTotalRemoved] = useState(0)
   const [turn, setTurn] = useState(0)
   const [won, setWon] = useState(false)
-  const [aiRemove, setAiRemove] = useState(0)
+  const [aiRemove, setAiRemove] = useState(0) 
+  const [history, setHistory] = useState([])
+  
 
   let fibonacci = []
   let previousNumber = 0
   let playerWon = false
   let remove = 0 // ai temporary removes
 
+  function arraySum(array) {
+    const initialValue = 0;
+    const sumWithInitial = array.reduce(
+            (previousValue, currentValue) => previousValue + currentValue, initialValue)
+    return sumWithInitial
+  }
+
   useEffect(() => {
-    setPresentNumber(prev => prev - playerRemove)
+    //setPresentNumber(prev => prev - playerRemove)
     console.log('useeffect player presentnum', presentNumber, 'ai', aiRemove, 'playerRev', playerRemove )
   }, [playerRemove])
 
   useEffect(() => {
-    setPresentNumber(prev => prev - aiRemove)
-    console.log('useeffect ai presentnum', presentNumber, 'ai', aiRemove, 'playerRev', playerRemove)
+    //(prev => prev - aiRemove)
+    console.log('useeffect ai resentnum', presentNumber, 'ai', aiRemove, 'playerRev', playerRemove)
   }, [aiRemove])
 
 //   useEffect(() => {
@@ -48,7 +57,15 @@ export default function PlayerVsPC () {
 
   useEffect(() => {
     setPresentNumber(beginning)
+    setTotalRemoved(0)
+    setHistory([])
   }, [beginning])
+
+  useEffect(() => {
+    const totalRemoved = arraySum(history)
+    setPresentNumber(beginning - totalRemoved)
+    console.log('player1turn affect total removed', totalRemoved, 'present num', presentNumber)
+  }, [player1Turn])
 
   const initialProps = {
     initial: random,
@@ -61,8 +78,10 @@ export default function PlayerVsPC () {
     previousNumber: aiRemove,
     beginning: beginning,
     turn: turn,
+    setTotalRemoved: totalRemoved => setTotalRemoved(totalRemoved),
     setPlayer1Turn: player1Turn => setPlayer1Turn(player1Turn),
-    setPlayerRemove: playerRemove => setPlayerRemove(playerRemove)
+    setPlayerRemove: playerRemove => setPlayerRemove(playerRemove),
+    setHistory: history => setHistory(history)
   }
 
   function newGame () {
@@ -71,6 +90,7 @@ export default function PlayerVsPC () {
     setChoseNumber(false)
     setBeginning(tempRandom)
     setTurn(0)
+    setTotalRemoved(0)
   }
 
   function winner () {
@@ -128,21 +148,10 @@ export default function PlayerVsPC () {
 
     // TODO check if removing all so that ai won
     previousNumber = remove
-    setAiRemove(0);
+    //setAiRemove(0);
+    setHistory(prev => [...prev, remove])
     setAiRemove(remove);
-    console.log('remove', remove)
-  }
-
-  if (choseNumber) {
-    //presentNumber = beginning;
-    // if (playerRemove > 0 && presentNumber > 0) {
-    //   do {
-    //      console.log('in do loop', playerRemove);
-    //      aiTurn();
-    //   }
-    //   while (presentNumber > 0);
-    //   winner();
-    // };
+    console.log('remove', history)
   }
 
   return (
