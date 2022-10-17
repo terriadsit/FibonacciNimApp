@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, TextInput} from 'react-native';
 import { useAnimatedGestureHandler } from 'react-native-reanimated';
 
 import FlatButton from './button';
+import arraySum from '../shared/arraySum';
 
 export default function PlayerChooses({...props}) {
    
@@ -12,13 +13,25 @@ export default function PlayerChooses({...props}) {
     const previousNumber = props.previousNumber;
     const setPlayer1Turn = props.setPlayer1Turn;
     const setPlayerRemove = props.setPlayerRemove;
+    const setPlayerWon = props.setPlayerWon;
     const beginning = props.beginning;
-    const setTotalRemoved = props.setTotalRemoved;
+    //const setTotalRemoved = props.setTotalRemoved;
     const setHistory = props.setHistory;
     const turn = props.turn;
+    const history = props.history;
+    
 
     const largest = previousNumber === 0 ? beginning - 1 : previousNumber * 2;
     
+    function checkForWin(removed) {
+        console.log('check for win beginning', beginning, 'history', arraySum(history))
+        if (beginning - arraySum(history) - removed <= 0) {
+            //playerWins()
+            console.log('player wins');
+            setPlayerWon(true);
+          }
+    }
+
     function onChange(number) {
         console.log('in onChange')
         setError('')
@@ -34,7 +47,9 @@ export default function PlayerChooses({...props}) {
             //setPlayerRemove(0);
             setPlayerRemove(tempRemove);
             setPlayer1Turn(false);
+            checkForWin(tempRemove);
             setHistory(prev => [...prev, Number(tempRemove)])
+            
             //console.log('in onEndit else', playerRemove)
         }
     }

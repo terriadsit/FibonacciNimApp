@@ -8,6 +8,8 @@ import DisplaySticks from '../components/displaySticks'
 import InitialNumber from '../components/initialNumber'
 import PlayerChooses from '../components/playerChooses'
 
+import arraySum from '../shared/arraySum'
+
 export default function PlayerVsPC () {
   const max = 200
   const tempRandom = Math.floor(Math.random() * max)
@@ -18,7 +20,6 @@ export default function PlayerVsPC () {
   const [presentNumber, setPresentNumber] = useState(0)
   const [player1Turn, setPlayer1Turn] = useState(false)
   const [playerRemove, setPlayerRemove] = useState(0)
-  const [totalRemoved, setTotalRemoved] = useState(0)
   const [turn, setTurn] = useState(0)
   const [aiRemove, setAiRemove] = useState(0) 
   const [history, setHistory] = useState([])
@@ -30,23 +31,14 @@ export default function PlayerVsPC () {
   let previousNumber = 0
   let remove = 0 // ai temporary removes
 
-  function arraySum(array) {
-    const initialValue = 0;
-    const sumWithInitial = array.reduce(
-            (previousValue, currentValue) => previousValue + currentValue, initialValue)
-    return sumWithInitial
-  }
-
   useEffect(() => {
     setPresentNumber(beginning)
-    setTotalRemoved(0)
     setHistory([])
   }, [beginning])
 
   useEffect(() => {
     const totalRemoved = arraySum(history)
     setPresentNumber(beginning - totalRemoved)
-    console.log('player1turn affect total removed', totalRemoved, 'present num', presentNumber)
   }, [player1Turn])
 
   const initialProps = {
@@ -58,12 +50,13 @@ export default function PlayerVsPC () {
 
   const playerChoosesProps = {
     previousNumber: aiRemove,
+    history: history,
     beginning: beginning,
     turn: turn,
-    setTotalRemoved: totalRemoved => setTotalRemoved(totalRemoved),
     setPlayer1Turn: player1Turn => setPlayer1Turn(player1Turn),
     setPlayerRemove: playerRemove => setPlayerRemove(playerRemove),
-    setHistory: history => setHistory(history)
+    setHistory: history => setHistory(history),
+    setPlayerWon: playerWon => setPlayerWon(playerWon)
   }
 
   function newGame () {
@@ -72,22 +65,21 @@ export default function PlayerVsPC () {
     setChoseNumber(false)
     setBeginning(tempRandom)
     setTurn(0)
-    setTotalRemoved(0)
     setAiWon(false)
     setPlayerWon(false)
     setWin(false)
   }
 
+
   function aiWins () {
     setAiWon(true)
-    //setPlayer1Turn(false)
     setWin(true)
   }
 
-  function playerWins() {
-    setPlayerWon(true)
-    setWin(true)
-  }
+//   function playerWins() {
+//     setPlayerWon(true)
+//     setWin(true)
+//   }
 
   function loadFibonacci (last) {
     let first = 1
@@ -104,7 +96,6 @@ export default function PlayerVsPC () {
 
   function aiTurnEnds () {
     aiTurn()
-    console.log('aiTurnEnds')
     setPlayer1Turn(true)
   }
 
@@ -113,11 +104,6 @@ export default function PlayerVsPC () {
     console.log('aiTurn, presentNumber', presentNumber, 'turn', turn)
     fibonacci = []
     previousNumber = playerRemove
-
-    if (beginning - arraySum(history) === 0) {
-      playerWins()
-      return
-    }
 
     // can AI win this round?
     if (presentNumber <= 2 * previousNumber && previousNumber !== 0) {
@@ -154,9 +140,9 @@ export default function PlayerVsPC () {
       {choseNumber &&  <Text>Beginning Game with {beginning} sticks.</Text>}
       {choseNumber && <Text>Presently there are {presentNumber} sticks.</Text>}
 
-      {choseNumber && player1Turn && !win && <PlayerChooses {...playerChoosesProps} />}
+      {choseNumber && player1Turn && !win && !playerWon && <PlayerChooses {...playerChoosesProps} />}
      
-      {choseNumber && !player1Turn && !win && (
+      {choseNumber && !player1Turn && !win && !playerWon && (
         <FlatButton text='your turn' onPress={aiTurnEnds} />
       )}
       {playerWon && <Text>You Won! Excellent!</Text>}
