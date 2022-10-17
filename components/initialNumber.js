@@ -7,7 +7,6 @@ export default function InitialNumber({...props}) {
    
     const [userNumberChoice, setUserNumberChoice] = useState(0);
     let initialSticks = props.initial;
-    //let textNumber = props.intitial;
     const setBeginning = props.setBeginning;
     const setChoseNumber = props.setChoseNumber;
     const setPlayer1Turn = props.setPlayer1Turn;
@@ -36,7 +35,7 @@ export default function InitialNumber({...props}) {
     return (
         <View>
             <View>
-              <Text style={styles.instructions}>Input an initial number of sticks or else press the button to start with {initialSticks} sticks</Text>
+              <Text style={styles.instructions}>Input an initial number of sticks or else press the button to start with {initialSticks} sticks.</Text>
               <View style={styles.chooseNumberContainer}>
               <TextInput
                      style={styles.input}

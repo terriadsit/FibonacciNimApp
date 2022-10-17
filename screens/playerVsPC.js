@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { View, Text } from 'react-native'
-import { set } from 'react-native-reanimated'
+import { View, Text, StyleSheet } from 'react-native'
 
 import FlatButton from '../components/button'
 import DisplaySticks from '../components/displaySticks'
@@ -9,6 +8,7 @@ import InitialNumber from '../components/initialNumber'
 import PlayerChooses from '../components/playerChooses'
 
 import arraySum from '../shared/arraySum'
+import { globalStyles } from '../styles/globalStyles'
 
 export default function PlayerVsPC () {
   const max = 200
@@ -24,7 +24,6 @@ export default function PlayerVsPC () {
   const [aiRemove, setAiRemove] = useState(0) 
   const [history, setHistory] = useState([])
   const [playerWon, setPlayerWon] = useState(false)
-  const [win, setWin] = useState(false)
   const [aiWon, setAiWon] = useState(false)
 
   let fibonacci = []
@@ -67,19 +66,12 @@ export default function PlayerVsPC () {
     setTurn(0)
     setAiWon(false)
     setPlayerWon(false)
-    setWin(false)
   }
 
 
   function aiWins () {
     setAiWon(true)
-    setWin(true)
   }
-
-//   function playerWins() {
-//     setPlayerWon(true)
-//     setWin(true)
-//   }
 
   function loadFibonacci (last) {
     let first = 1
@@ -101,7 +93,6 @@ export default function PlayerVsPC () {
 
   function aiTurn () {
     
-    console.log('aiTurn, presentNumber', presentNumber, 'turn', turn)
     fibonacci = []
     previousNumber = playerRemove
 
@@ -134,21 +125,27 @@ export default function PlayerVsPC () {
   }
 
   return (
-    <View>
+    <View style={globalStyles.container}>
       {!choseNumber && <InitialNumber {...initialProps} />}
 
-      {choseNumber &&  <Text>Beginning Game with {beginning} sticks.</Text>}
-      {choseNumber && <Text>Presently there are {presentNumber} sticks.</Text>}
-
-      {choseNumber && player1Turn && !win && !playerWon && <PlayerChooses {...playerChoosesProps} />}
+      {choseNumber && <Text style={globalStyles.text}>Beginning Game with {beginning} sticks.</Text>}
+      {choseNumber && <Text style={globalStyles.text}>Presently there are {presentNumber} sticks.</Text>}
+      {choseNumber && player1Turn && !aiWon && !playerWon && <PlayerChooses {...playerChoosesProps} />}
      
-      {choseNumber && !player1Turn && !win && !playerWon && (
+      {choseNumber && !player1Turn && !aiWon && !playerWon && (
         <FlatButton text='your turn' onPress={aiTurnEnds} />
       )}
-      {playerWon && <Text>You Won! Excellent!</Text>}
-      {aiWon && <Text>Ai chose {aiRemove} sticks. You lost, press New Game to try again</Text>}
+
+      {playerWon && <Text style={globalStyles.text}>You Won! Excellent!</Text>}
+      {aiWon && <Text style={globalStyles.text}>Ai chose {aiRemove} sticks. You lost, press New Game to try again</Text>}
       {choseNumber && <DisplaySticks howMany={beginning} />}
       {choseNumber && <FlatButton text='New Game' onPress={newGame} />}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 10
+    }
+})

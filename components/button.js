@@ -10,7 +10,7 @@ import {
 
 export default function FlatButton({ text, onPress }) {
     return(
-        <TouchableOpacity onPress={onPress} >
+        <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
             <View style={styles.button}>
                 <Text style={styles.buttonText}>{text}</Text>
             </View>
@@ -19,14 +19,19 @@ export default function FlatButton({ text, onPress }) {
 }
 
 const styles = StyleSheet.create({
+    buttonContainer: {
+        paddingTop: 10
+    },
     button: {
+        
         borderRadius: 18,
         paddingVertical: 14,
         paddingHorizontal: 10,
         backgroundColor: '#5C5565',
         width: 150,
         alignSelf: 'center',
-        height: 50
+        height: 50,
+       
     },
     buttonText: {
         color: 'white',
