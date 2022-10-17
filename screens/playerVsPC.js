@@ -126,20 +126,24 @@ export default function PlayerVsPC () {
 
   return (
     <View style={globalStyles.container}>
-      {!choseNumber && <InitialNumber {...initialProps} />}
+        <View>
+          {!choseNumber && <InitialNumber {...initialProps} />}
 
-      {choseNumber && <Text style={globalStyles.text}>Beginning Game with {beginning} sticks.</Text>}
-      {choseNumber && <Text style={globalStyles.text}>Presently there are {presentNumber} sticks.</Text>}
-      {choseNumber && player1Turn && !aiWon && !playerWon && <PlayerChooses {...playerChoosesProps} />}
+          {choseNumber && <Text style={globalStyles.text}>Beginning Game with {beginning} sticks.</Text>}
+          {choseNumber && <Text style={globalStyles.text}>Presently there are {presentNumber} sticks.</Text>}
+          {choseNumber && player1Turn && !aiWon && !playerWon && <PlayerChooses {...playerChoosesProps} />}
      
-      {choseNumber && !player1Turn && !aiWon && !playerWon && (
-        <FlatButton text='your turn' onPress={aiTurnEnds} />
-      )}
+          {choseNumber && !player1Turn && !aiWon && !playerWon && (
+            <FlatButton text='your turn' onPress={aiTurnEnds} />
+          )}
 
-      {playerWon && <Text style={globalStyles.text}>You Won! Excellent!</Text>}
-      {aiWon && <Text style={globalStyles.text}>Ai chose {aiRemove} sticks. You lost, press New Game to try again</Text>}
-      {choseNumber && <DisplaySticks howMany={beginning} />}
-      {choseNumber && <FlatButton text='New Game' onPress={newGame} />}
+          {playerWon && <Text style={globalStyles.text}>You Won! Excellent!</Text>}
+          {aiWon && <Text style={globalStyles.text}>Ai chose {aiRemove} sticks. You lost, press New Game to try again</Text>}
+          {choseNumber && <DisplaySticks howMany={presentNumber} />}
+      </View>
+      <View style={styles.bottomRow}>
+        {choseNumber && <FlatButton text='New Game' onPress={newGame} />}
+      </View>
     </View>
   )
 }
@@ -147,5 +151,9 @@ export default function PlayerVsPC () {
 const styles = StyleSheet.create({
     container: {
         padding: 10
+    },
+    bottomRow: {
+        paddingTop: 250,
     }
+
 })

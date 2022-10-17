@@ -21,6 +21,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexWrap: 'wrap',
         flexDirection: 'row',
-        padding: 20,
+        paddingTop: 30,
     }
 })

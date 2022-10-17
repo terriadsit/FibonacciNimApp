@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TextInput} from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, Text, View, Image, TextInput, DatePickerAndroid} from 'react-native';
 
+import { globalStyles } from '../styles/globalStyles';
 import FlatButton from './button';
 
+
 export default function InitialNumber({...props}) {
+
+    const focusRef = useRef()
+
+    useEffect(() => {     
+      if (focusRef.current) focusRef.current.focus()
+    },[focusRef])
+  
    
     const [userNumberChoice, setUserNumberChoice] = useState(0);
     let initialSticks = props.initial;
@@ -33,35 +42,43 @@ export default function InitialNumber({...props}) {
     }
 
     return (
-        <View>
-            <View>
-              <Text style={styles.instructions}>Input an initial number of sticks or else press the button to start with {initialSticks} sticks.</Text>
-              <View style={styles.chooseNumberContainer}>
-              <TextInput
+        <View style={styles.container}>
+            
+              <Text style={globalStyles.text}>Input an initial number of sticks or else press the button to start with {initialSticks} sticks.</Text>
+              <View style={styles.choiceContainer}>
+                <Text style={globalStyles.text}>Enter Choice: </Text>   
+                 <TextInput
                      style={styles.input}
+                     ref={focusRef}
                      onChangeText={text => onChange(text.replace(/[^0-9]/g, ''))}
                      onEndEditing={onEndEdit}
                      value={userNumberChoice}
                      keyboardType="numeric"
-                />
-                <FlatButton text={initialSticks} onPress={hide}  />
-             </View> 
-           </View>
+                  />
+                </View>
+                <Text style={globalStyles.text}>Or : </Text>
+               
+                
+                  <FlatButton text={initialSticks} onPress={hide}  />
+                
+          
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    instructions: {
-        padding: 10
+    container: {
+        
     },
-    chooseNumberContainer: {
+    instructions: {
+        padding: 10,
+    },
+    choiceContainer: {
         flex: 1,
         flexDirection: 'row',
-        padding: 30,
-        justifyContent: 'space-around',
+        paddingTop: 40,
+        //justifyContent: 'space-around',
         alignItems: 'center',
-        
     },
     input: {
         height: 60,

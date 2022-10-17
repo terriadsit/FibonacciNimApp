@@ -4,9 +4,10 @@ export const globalStyles = StyleSheet.create({
     
     container: {
         flex: 1,
-        padding: 40,
+        padding: 20,
         backgroundColor: 'white',
         height: '100%',
+        justifyContent: 'flex-start',
         
     },
     titleText: {

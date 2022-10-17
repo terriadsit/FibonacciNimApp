@@ -4,6 +4,7 @@ import { useAnimatedGestureHandler } from 'react-native-reanimated';
 
 import FlatButton from './button';
 import arraySum from '../shared/arraySum';
+import { globalStyles } from '../styles/globalStyles';
 
 export default function PlayerChooses({...props}) {
    
@@ -15,21 +16,23 @@ export default function PlayerChooses({...props}) {
     const setPlayerRemove = props.setPlayerRemove;
     const setPlayerWon = props.setPlayerWon;
     const beginning = props.beginning;
-    //const setTotalRemoved = props.setTotalRemoved;
     const setHistory = props.setHistory;
     const turn = props.turn;
     const history = props.history;
     
-
-    const largest = previousNumber === 0 ? beginning - 1 : previousNumber * 2;
+    const removedSoFar = arraySum(history);
+    let largest = previousNumber === 0 ? beginning - 1 : previousNumber * 2;
+    if (largest > beginning - removedSoFar) {
+        largest = beginning - removedSoFar
+    }
     
     function checkForWin(removed) {
         console.log('check for win beginning', beginning, 'history', arraySum(history))
-        if (beginning - arraySum(history) - removed <= 0) {
+        if (beginning - removedSoFar - removed === 0) {
             //playerWins()
             console.log('player wins');
             setPlayerWon(true);
-          }
+         } 
     }
 
     function onChange(number) {
@@ -39,7 +42,7 @@ export default function PlayerChooses({...props}) {
     }
 
     function onEndEdit() {
-        console.log('tempRemove', tempRemove)
+       console.log('tempRemove', tempRemove)
         if (tempRemove < 1 || tempRemove > largest) {
             setError(`Choose a number between 1 and ${largest}`)
         } else {
@@ -49,9 +52,7 @@ export default function PlayerChooses({...props}) {
             setPlayer1Turn(false);
             checkForWin(tempRemove);
             setHistory(prev => [...prev, Number(tempRemove)])
-            
-            //console.log('in onEndit else', playerRemove)
-        }
+         }
     }
 
     
@@ -69,7 +70,7 @@ export default function PlayerChooses({...props}) {
                      keyboardType="numeric"
                 />
              </View> 
-             {error && <Text>{error}</Text>}
+             {error && <Text style={globalStyles.errorText}>{error}</Text>}
            </View>
         </View>
     )
@@ -77,7 +78,8 @@ export default function PlayerChooses({...props}) {
 
 const styles = StyleSheet.create({
     instructions: {
-        padding: 10
+        padding: 10,
+        fontFamily: 'Gothic'
     },
     chooseNumberContainer: {
         flex: 1,
