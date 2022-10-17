@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, DatePickerAndroid} from 'react-native';
+import { StyleSheet, Text, View,  TextInput} from 'react-native';
 
 import { globalStyles } from '../styles/globalStyles';
 import FlatButton from './button';
@@ -46,7 +46,7 @@ export default function InitialNumber({...props}) {
             
               <Text style={globalStyles.text}>Input an initial number of sticks or else press the button to start with {initialSticks} sticks.</Text>
               <View style={styles.choiceContainer}>
-                <Text style={globalStyles.text}>Enter Choice: </Text>   
+                 
                  <TextInput
                      style={styles.input}
                      ref={focusRef}
@@ -56,6 +56,7 @@ export default function InitialNumber({...props}) {
                      keyboardType="numeric"
                   />
                 </View>
+                <Text></Text>
                 <Text style={globalStyles.text}>Or : </Text>
                
                 
@@ -68,7 +69,7 @@ export default function InitialNumber({...props}) {
 
 const styles = StyleSheet.create({
     container: {
-        
+       paddingTop: 20 
     },
     instructions: {
         padding: 10,
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         paddingTop: 40,
-        //justifyContent: 'space-around',
+        justifyContent: 'center',
         alignItems: 'center',
     },
     input: {
