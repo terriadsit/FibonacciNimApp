@@ -7,28 +7,26 @@ import DisplaySticks from '../components/displaySticks'
 import InitialNumber from '../components/initialNumber'
 import PlayerChooses from '../components/playerChooses'
 
+import aiTurn from '../shared/aiTurn'
 import arraySum from '../shared/arraySum'
 import { globalStyles } from '../styles/globalStyles'
 
 export default function PlayerVsPC () {
-  const max = 200
-  const tempRandom = Math.floor(Math.random() * max)
+  const max = 150
+  const tempRandom = Math.floor(Math.random() * max) + 5
 
   const [beginning, setBeginning] = useState(tempRandom)
   const [random, setRandom] = useState(tempRandom)
   const [choseNumber, setChoseNumber] = useState(false)
   const [presentNumber, setPresentNumber] = useState(0)
   const [player1Turn, setPlayer1Turn] = useState(false)
-  const [playerRemove, setPlayerRemove] = useState(0)
-  const [turn, setTurn] = useState(0)
-  const [aiRemove, setAiRemove] = useState(0) 
+  const [player1Remove, setPlayer1Remove] = useState(0)
+  const [player2Remove, setPlayer2Remove] = useState(0) 
   const [history, setHistory] = useState([])
-  const [playerWon, setPlayerWon] = useState(false)
-  const [aiWon, setAiWon] = useState(false)
-
-  let fibonacci = []
-  let previousNumber = 0
-  let remove = 0 // ai temporary removes
+  const [player1Won, setPlayer1Won] = useState(false)
+  const [player2Won, setPlayer2Won] = useState(false)
+  const [player1Name, setPlayer1Name] = useState('Player 1')
+  const [player2Name, setPlayer2Name] = useState('A.I. Fibi')
 
   useEffect(() => {
     setPresentNumber(beginning)
@@ -48,80 +46,33 @@ export default function PlayerVsPC () {
   }
 
   const playerChoosesProps = {
-    previousNumber: aiRemove,
+    previousNumber: player2Remove,
     history: history,
     beginning: beginning,
-    turn: turn,
     setPlayer1Turn: player1Turn => setPlayer1Turn(player1Turn),
-    setPlayerRemove: playerRemove => setPlayerRemove(playerRemove),
+    setPlayer1Remove: player1Remove => setPlayer1Remove(player1Remove),
     setHistory: history => setHistory(history),
-    setPlayerWon: playerWon => setPlayerWon(playerWon)
+    setPlayer1Won: player1Won => setPlayer1Won(player1Won)
   }
 
   function newGame () {
-    setPlayerRemove(0)
-    setAiRemove(0)
+    setPlayer1Remove(0)
+    setPlayer2Remove(0)
     setChoseNumber(false)
     setBeginning(tempRandom)
-    setTurn(0)
-    setAiWon(false)
-    setPlayerWon(false)
+    setPlayer2Won(false)
+    setPlayer1Won(false)
   }
 
 
   function aiWins () {
-    setAiWon(true)
+    setPlayer2Won(true)
   }
 
-  function loadFibonacci (last) {
-    let first = 1
-    let second = 1
-    let next = first + second
-    fibonacci.push(first, second)
-    while (next < last) {
-      fibonacci.push(next)
-      first = second
-      second = next
-      next = first + second
-    }
-  }
 
   function aiTurnEnds () {
-    aiTurn()
+    aiTurn(presentNumber, player1Remove, setHistory, setPlayer2Remove, aiWins)
     setPlayer1Turn(true)
-  }
-
-  function aiTurn () {
-    
-    fibonacci = []
-    previousNumber = playerRemove
-
-    // can AI win this round?
-    if (presentNumber <= 2 * previousNumber && previousNumber !== 0) {
-        remove = presentNumber
-        aiWins()
-    } else {
-
-      loadFibonacci(presentNumber)
-
-      // choose how many to remove
-      let total = 0
-      for (let i = fibonacci.length - 1; i >= 1; i--) {
-        if (total + fibonacci[i] <= presentNumber) {
-          total += fibonacci[i]
-          remove = fibonacci[i]
-        }
-      }
-
-      // only able to remove if following rules
-      if (remove > 2 * previousNumber) {
-        remove = 2 * previousNumber
-      }
-    }
-    
-    previousNumber = remove
-    setHistory(prev => [...prev, remove])
-    setAiRemove(remove);
   }
 
   return (
@@ -131,14 +82,14 @@ export default function PlayerVsPC () {
 
           {choseNumber && <Text style={globalStyles.text}>Beginning Game with {beginning} sticks.</Text>}
           {choseNumber && <Text style={globalStyles.text}>Presently there are {presentNumber} sticks.</Text>}
-          {choseNumber && player1Turn && !aiWon && !playerWon && <PlayerChooses {...playerChoosesProps} />}
+          {choseNumber && player1Turn && !player2Won && !player1Won && <PlayerChooses {...playerChoosesProps} />}
      
-          {choseNumber && !player1Turn && !aiWon && !playerWon && (
-            <FlatButton text='your turn' onPress={aiTurnEnds} />
+          {choseNumber && !player1Turn && !player2Won && !player1Won && (
+            <FlatButton text={`${player1Name} turn`} onPress={aiTurnEnds} />
           )}
 
-          {playerWon && <Text style={globalStyles.text}>You Won! Excellent!</Text>}
-          {aiWon && <Text style={globalStyles.text}>Ai chose {aiRemove} sticks. You lost, press New Game to try again</Text>}
+          {player1Won && <Text style={globalStyles.text}>You Won! Excellent!</Text>}
+          {player2Won && <Text style={globalStyles.text}>Ai chose {player2Remove} sticks. You lost, press New Game to try again</Text>}
           {choseNumber && <DisplaySticks howMany={presentNumber} />}
       </View>
       <View style={styles.bottomRow}>

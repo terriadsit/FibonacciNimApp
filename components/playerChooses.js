@@ -13,14 +13,14 @@ export default function PlayerChooses({...props}) {
 
     const previousNumber = props.previousNumber;
     const setPlayer1Turn = props.setPlayer1Turn;
-    const setPlayerRemove = props.setPlayerRemove;
-    const setPlayerWon = props.setPlayerWon;
+    const setPlayer1Remove = props.setPlayer1Remove;
+    const setPlayer1Won = props.setPlayer1Won;
     const beginning = props.beginning;
     const setHistory = props.setHistory;
-    const turn = props.turn;
     const history = props.history;
     
     const removedSoFar = arraySum(history);
+
     let largest = previousNumber === 0 ? beginning - 1 : previousNumber * 2;
     if (largest > beginning - removedSoFar) {
         largest = beginning - removedSoFar
@@ -29,9 +29,7 @@ export default function PlayerChooses({...props}) {
     function checkForWin(removed) {
         console.log('check for win beginning', beginning, 'history', arraySum(history))
         if (beginning - removedSoFar - removed === 0) {
-            //playerWins()
-            console.log('player wins');
-            setPlayerWon(true);
+            setPlayer1Won(true);
          } 
     }
 
@@ -47,8 +45,7 @@ export default function PlayerChooses({...props}) {
             setError(`Choose a number between 1 and ${largest}`)
         } else {
             setError('');
-            //setPlayerRemove(0);
-            setPlayerRemove(tempRemove);
+            setPlayer1Remove(tempRemove);
             setPlayer1Turn(false);
             checkForWin(tempRemove);
             setHistory(prev => [...prev, Number(tempRemove)])
