@@ -23,7 +23,7 @@ export default function DirectionsStack() {
       }}
       >
         <Stack.Screen 
-          name="Directions" 
+          name="DirectionsStack" 
           component={Directions}
           options={{ headerShown: false }} 
         />

@@ -4,17 +4,19 @@ import { StyleSheet, Text, View, TextInput } from 'react-native'
 import { globalStyles } from '../styles/globalStyles'
 import FlatButton from './button'
 
-export default function EnterName ({ setPlayerName }) {
+export default function EnterName ({ setPlayerName, player }) {
   const [tempName, setTempName] = useState('')
-
+  
+  console.log('in Entername', player)
   function onEndEditing () {
     setPlayerName(tempName)
+    console.log('tempname', tempName)
   }
 
   return (
     <View style={styles.container}>
       
-      <Text style={globalStyles.text}> Enter Player 1's name:</Text>
+      <Text style={globalStyles.text}> Enter Player {player}'s name:</Text>
 
       <View style={styles.inputContainer}>
         <TextInput

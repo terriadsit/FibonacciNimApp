@@ -18,6 +18,8 @@ export default function PlayerChooses({...props}) {
     const beginning = props.beginning;
     const setHistory = props.setHistory;
     const history = props.history;
+    const name = props.name;
+    const prevName = props.prevName;
     
     const removedSoFar = arraySum(history);
 
@@ -46,9 +48,9 @@ export default function PlayerChooses({...props}) {
         } else {
             setError('');
             setPlayerRemove(tempRemove);
-            setPlayer1Turn(false);
             checkForWin(tempRemove);
             setHistory(prev => [...prev, Number(tempRemove)])
+            setPlayer1Turn(prev => !prev)
          }
     }
 
@@ -56,8 +58,8 @@ export default function PlayerChooses({...props}) {
     return (
         <View>
             <View>
-              {previousNumber !== 0 && <Text style={styles.instructions}>The last player, AI, removed {previousNumber}.</Text>}
-              <Text style={styles.instructions}> You may remove between 1 and {largest}.</Text>
+              {previousNumber !== 0 && <Text style={styles.instructions}>The last player, {prevName}, removed {previousNumber}.</Text>}
+              <Text style={styles.instructions}> {name} may remove between 1 and {largest}.</Text>
               <View style={styles.chooseNumberContainer}>
                 <TextInput
                      style={styles.input}

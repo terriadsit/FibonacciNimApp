@@ -21,7 +21,7 @@ export default function GameManager({gameType}) {
   const [random, setRandom] = useState(tempRandom)
   const [choseNumber, setChoseNumber] = useState(false)
   const [presentNumber, setPresentNumber] = useState(0)
-  const [player1Turn, setPlayer1Turn] = useState(false)
+  const [player1Turn, setPlayer1Turn] = useState(true)
   const [player1Remove, setPlayer1Remove] = useState(0)
   const [player2Remove, setPlayer2Remove] = useState(0) 
   const [history, setHistory] = useState([])
@@ -49,6 +49,8 @@ export default function GameManager({gameType}) {
 
   const player1ChoosesProps = {
     previousNumber: player2Remove,
+    name: player1Name,
+    prevName: player2Name,
     history: history,
     beginning: beginning,
     setPlayer1Turn: player1Turn => setPlayer1Turn(player1Turn),
@@ -59,6 +61,8 @@ export default function GameManager({gameType}) {
 
   const player2ChoosesProps = {
     previousNumber: player1Remove,
+    name: player2Name,
+    prevName: player1Name,
     history: history,
     beginning: beginning,
     setPlayer1Turn: player1Turn => setPlayer1Turn(player1Turn),
@@ -74,6 +78,7 @@ export default function GameManager({gameType}) {
     setBeginning(tempRandom)
     setPlayer2Won(false)
     setPlayer1Won(false)
+    setPlayer1Turn(true)
   }
 
 
@@ -88,15 +93,13 @@ export default function GameManager({gameType}) {
   }
 
   function whichGame() {
-    console.log('game type', gameType)
     switch(gameType) {
-      
-      case 'AI': {
-        
+     case 'AI': {
         aiTurnEnds()
         break;
       }
       case 'local': {
+        //setPlayer1Turn(prev => !prev)
         break;
       }
       case 'online': {
@@ -110,24 +113,26 @@ export default function GameManager({gameType}) {
 
   }
 
+  
   return (
     <View style={globalStyles.container}>
         <View>
-          {!player1Name && <EnterName style={styles.enterName} setPlayerName={setPlayer1Name} />}
-          {!player2Name && gameType !== 'AI' && <EnterName setPlayerName={setPlayer1Name} />}
+          {!player1Name && <EnterName style={styles.enterName} setPlayerName={setPlayer1Name} player={'1'}/>}
+          {!choseNumber && gameType === 'local' && <EnterName setPlayerName={setPlayer2Name} player={'2'}/>}
 
-          {!choseNumber && player1Name && <InitialNumber {...initialProps} />}
+          {!choseNumber && player1Name && player2Name && <InitialNumber {...initialProps} />}
 
           {choseNumber && <Text style={globalStyles.text}>Beginning Game with {beginning} sticks.</Text>}
           {choseNumber && <Text style={globalStyles.text}>Presently there are {presentNumber} sticks.</Text>}
           {choseNumber && player1Turn && !player2Won && !player1Won && <PlayerChooses {...player1ChoosesProps} />}
+          {choseNumber && gameType !== 'AI' && !player1Turn && !player2Won && !player1Won && <PlayerChooses {...player2ChoosesProps} />}
      
-          {choseNumber && !player1Turn && !player2Won && !player1Won && (
+          {choseNumber && !player2Won && !player1Won && (
             <FlatButton text={`Next Turn`} onPress={whichGame} />
           )}
 
-          {player1Won && <Text style={globalStyles.text}>{player1Name} Won! They chose {player2Remove} sticks.</Text>}
-          {player2Won && <Text style={globalStyles.text}>{player2Name} Won! They chose {player2Remove} sticks.</Text>}
+          {player1Won && <Text style={globalStyles.text}>{player1Name} won after choosing {player1Remove} sticks!</Text>}
+          {player2Won && <Text style={globalStyles.text}>{player2Name} won after choosing {player2Remove} sticks!</Text>}
           {choseNumber && <DisplaySticks howMany={presentNumber} />}
       </View>
       <View style={styles.bottomRow}>

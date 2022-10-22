@@ -6,6 +6,17 @@ import Stick from './stick';
 
 export default function DisplaySticks({howMany}) {
     const emptyArray = Array(howMany).fill(0);
+
+    if (howMany < 0 || howMany > 1000) {
+        console.log('error, must be between 0 and 1000 sticks')
+        return (
+            <View>
+                <Text>
+                    Error, must be between 0 and 1000 sticks
+                </Text>
+            </View>
+        )
+    }
   
     return (
         <View>
