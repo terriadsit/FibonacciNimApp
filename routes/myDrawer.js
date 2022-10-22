@@ -54,7 +54,7 @@ function CustomDrawerContent(props) {
         drawerContent={(props) => <CustomDrawerContent {...props} />}
       >
         <Drawer.Screen 
-          name="HomeStack" 
+          name="Home" 
           component={HomeStack} 
           options={{ headerTitle: (props) => <Header title='Fibonacci Nim ' /> }} 
          />

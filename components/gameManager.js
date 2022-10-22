@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     bottomRow: {
-        paddingTop: 250,
+        paddingTop: 200,
     }
 
 })

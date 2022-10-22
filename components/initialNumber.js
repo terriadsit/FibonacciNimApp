@@ -14,7 +14,7 @@ export default function InitialNumber({...props}) {
     },[focusRef])
   
    
-    const [userNumberChoice, setUserNumberChoice] = useState(0);
+    const [userNumberChoice, setUserNumberChoice] = useState(1);
     let initialSticks = props.initial;
     const setBeginning = props.setBeginning;
     const setChoseNumber = props.setChoseNumber;
@@ -29,6 +29,9 @@ export default function InitialNumber({...props}) {
     }
 
     function onEndEdit() {
+        if (initialSticks < 2 || initialSticks > 1000) {
+            initialSticks = 2;
+        };
         setBeginning(initialSticks);
         setChoseNumber(true);
         console.log('onEndit intialSticks', initialSticks);

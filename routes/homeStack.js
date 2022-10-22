@@ -23,7 +23,7 @@ export default function HomeStack() {
       }}
       >
         <Stack.Screen 
-          name="Home" 
+          name="HomeScreen" 
           component={Home}
           options={{ headerShown: false }} 
         />
