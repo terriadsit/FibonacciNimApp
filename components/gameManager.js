@@ -12,7 +12,7 @@ import arraySum from '../shared/arraySum'
 import { globalStyles } from '../styles/globalStyles'
 import EnterName from './enterName'
 
-export default function GameManager (gameType) {
+export default function GameManager({gameType}) {
   
   const max = 150
   const tempRandom = Math.floor(Math.random() * max) + 5
@@ -47,14 +47,24 @@ export default function GameManager (gameType) {
     setPlayer1Turn: player1Turn => setPlayer1Turn(player1Turn)
   }
 
-  const playerChoosesProps = {
+  const player1ChoosesProps = {
     previousNumber: player2Remove,
     history: history,
     beginning: beginning,
     setPlayer1Turn: player1Turn => setPlayer1Turn(player1Turn),
-    setPlayer1Remove: player1Remove => setPlayer1Remove(player1Remove),
+    setPlayerRemove: player1Remove => setPlayer1Remove(player1Remove),
     setHistory: history => setHistory(history),
-    setPlayer1Won: player1Won => setPlayer1Won(player1Won)
+    setPlayerWon: player1Won => setPlayer1Won(player1Won)
+  }
+
+  const player2ChoosesProps = {
+    previousNumber: player1Remove,
+    history: history,
+    beginning: beginning,
+    setPlayer1Turn: player1Turn => setPlayer1Turn(player1Turn),
+    setPlayerRemove: player2Remove => setPlayer2Remove(player2Remove),
+    setHistory: history => setHistory(history),
+    setPlayerWon: player2Won => setPlayer2Won(player2Won)
   }
 
   function newGame () {
@@ -77,6 +87,29 @@ export default function GameManager (gameType) {
     setPlayer1Turn(true)
   }
 
+  function whichGame() {
+    console.log('game type', gameType)
+    switch(gameType) {
+      
+      case 'AI': {
+        
+        aiTurnEnds()
+        break;
+      }
+      case 'local': {
+        break;
+      }
+      case 'online': {
+        console.log('online game in switch')
+        break;
+      }
+      default: {
+        console.log('must be a local, AI or online game')
+      }
+    }
+
+  }
+
   return (
     <View style={globalStyles.container}>
         <View>
@@ -87,14 +120,14 @@ export default function GameManager (gameType) {
 
           {choseNumber && <Text style={globalStyles.text}>Beginning Game with {beginning} sticks.</Text>}
           {choseNumber && <Text style={globalStyles.text}>Presently there are {presentNumber} sticks.</Text>}
-          {choseNumber && player1Turn && !player2Won && !player1Won && <PlayerChooses {...playerChoosesProps} />}
+          {choseNumber && player1Turn && !player2Won && !player1Won && <PlayerChooses {...player1ChoosesProps} />}
      
           {choseNumber && !player1Turn && !player2Won && !player1Won && (
-            <FlatButton text={`${player1Name} turn`} onPress={aiTurnEnds} />
+            <FlatButton text={`Next Turn`} onPress={whichGame} />
           )}
 
-          {player1Won && <Text style={globalStyles.text}>You Won! Excellent!</Text>}
-          {player2Won && <Text style={globalStyles.text}>Ai chose {player2Remove} sticks. You lost, press New Game to try again</Text>}
+          {player1Won && <Text style={globalStyles.text}>{player1Name} Won! They chose {player2Remove} sticks.</Text>}
+          {player2Won && <Text style={globalStyles.text}>{player2Name} Won! They chose {player2Remove} sticks.</Text>}
           {choseNumber && <DisplaySticks howMany={presentNumber} />}
       </View>
       <View style={styles.bottomRow}>

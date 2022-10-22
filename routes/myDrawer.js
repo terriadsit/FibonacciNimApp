@@ -64,7 +64,7 @@ function CustomDrawerContent(props) {
           options={{ headerTitle: (props) => <Header title='What to do  ' /> }} 
          />
          <Drawer.Screen 
-          name="Against AI" 
+          name="Against A.I. Fibi" 
           component={PlayerVsPC} 
           options={{ headerTitle: (props) => <Header title='Beat the computer'/> }}
         />
