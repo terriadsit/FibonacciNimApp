@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 export default function Header({ title }) {
-    const image = require('../assets/sticks.png');
+    const image = require('../assets/splash.png');
   
     return (
          
