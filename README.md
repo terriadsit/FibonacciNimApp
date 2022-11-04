@@ -1,6 +1,6 @@
 # FibonacciNimApp
 
-A mobile app created with React-Native Expo to allow users to play Fibonacci Nim against the computer or antoher player locally or online. Status: ready for online play to be added via backend.
+A mobile app created with React-Native Expo to allow users to play Fibonacci Nim against the computer or antoher player locally or online. Status: ready for online play to be added via backend after first making backend to sister project, fibonacci-web-app.
 ![screenshots](assets/screenShots.png)  
 
 
